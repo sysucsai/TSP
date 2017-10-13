@@ -30,9 +30,9 @@ def get_city_coordinate(data, city_num):
 			x = float(x)
 			y = float(y)
 			city_coordinate.append((x, y))
-		if now == city_num:
+			now += 1
+		if now == city_num + 1:
 			break
-		now += 1
 	return city_coordinate
 
 
