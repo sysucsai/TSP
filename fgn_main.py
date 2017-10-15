@@ -62,8 +62,8 @@ def sa(input):
 	count = 0
 	random_count = 0
 	small_e_count = 0
-	while small_e_count < 10000:
-		for iloop in range(15000):
+	while small_e_count < int(n*n/2):
+		for iloop in range(int(n*n/2)):
 			count += 1
 			i = random.randint(0, n - 1)
 			j = random.randint(0, n - 1)
@@ -88,7 +88,7 @@ def sa(input):
 				else:
 					small_e_count = 0
 				random_count += 1
-			if (random_count > 10000):
+			if random_count > int(n*n/4):
 				break
 		t *= delta
 		print(t, e)
@@ -112,9 +112,9 @@ def sa(input):
 	return best_ans, best_path
 
 if __name__ == "__main__":
-	ans, ans_path = sa(r"data\ch130.tsp")
+	ans, ans_path = sa(r"data\eil101.tsp")
 	print("My ans is ", ans, " : ", ans_path)
-	std_path = read_ans.read_ans(n, r"data\ch130.opt.tour")
+	std_path = read_ans.read_ans(n, r"data\eil101.opt.tour")
 	print("Standard ans is ", dis_cal(std_path), " : ", std_path)
 	tmp = [(map[i][0],map[i][1]) for i in ans_path]
 	tmp.append((map[ans_path[0]][0], map[ans_path[0]][1]))
