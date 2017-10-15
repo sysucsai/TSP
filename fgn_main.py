@@ -17,6 +17,7 @@ def inital_dis(n, map):
 		dis[i] = tuple(dis[i])
 	dis = tuple(dis)
 
+
 def dis_cal(path):
 	back = 0
 	for i in range(n):
@@ -51,7 +52,7 @@ def sa(input):
 	inital_dis(n, map)
 	#print(dis)
 	t = 3000
-	delta = 0.999999
+	delta = 0.999
 	map = tuple(map)
 	now_path = [ i for i in range(n) ]
 	now_path = tuple(now_path)
@@ -59,35 +60,38 @@ def sa(input):
 	best_ans = now_ans
 	best_path = now_path
 	count = 0
-	count_0 = 0
-	while t > 0.0001:
-		count += 1
-		i = random.randint(0, n - 1)
-		j = random.randint(0, n - 1)
-		while i >= j:
+	random_count = 0
+	small_e_count = 0
+	while small_e_count < 10000:
+		for iloop in range(15000):
+			count += 1
 			i = random.randint(0, n - 1)
 			j = random.randint(0, n - 1)
-		new_ans, new_path= swap(now_ans, now_path, i, j)
-		#print(t, now_ans, now_path)
-		if new_ans < best_ans:
-			best_ans = new_ans
-			best_path = new_path
-		if new_ans < now_ans:
-			now_ans = new_ans
-			now_path = new_path
-		else:
-			e = math.exp((now_ans-new_ans)/t)
-			if random.random() < e:
+			while i >= j:
+				i = random.randint(0, n - 1)
+				j = random.randint(0, n - 1)
+			new_ans, new_path= swap(now_ans, now_path, i, j)
+			if new_ans < best_ans:
+				best_ans = new_ans
+				best_path = new_path
+			if new_ans < now_ans:
 				now_ans = new_ans
 				now_path = new_path
-			elif e < 1e-2:
-				count_0 += 1
+				random_count = 0
 			else:
-				count_0 = 0
-			if count_0 == 100:
+				e = math.exp((now_ans-new_ans)/t)
+				if random.random() < e:
+					now_ans = new_ans
+					now_path = new_path
+				elif e < 1e-3:
+					small_e_count += 1
+				else:
+					small_e_count = 0
+				random_count += 1
+			if (random_count > 10000):
 				break
-			t *= delta
-			print(t, e)
+		t *= delta
+		print(t, e)
 	while 1:
 		count += 1
 		print(count)
