@@ -37,19 +37,9 @@ def swap(old_ans, old_path, i, j):
 		return dis_cal(new_path), new_path
 
 
-def test_argu(p, delta):
-	count = 1
-	print("p = ", p, "    delta = ", delta)
-	for i in range(1,n+1):
-		count += count * n*(n-1)/2*p
-		p = p * delta
-	print("p = ", p, "    count = ", count)
-
-
 def hill_climbing(input):
 	global n, map
 	#n, map = readin.readin()   #n is the sum of cities, map[i] returns the location of a city(22.11, 45.23)
-	#p = 1; delta = 0.99
 	#map = tuple(map)
 	ans_path = [ i for i in range(n) ]
 
