@@ -8,3 +8,9 @@ def plot(city_coordinate):
 	plt.scatter(*zip(*city_coordinate))
 	plt.plot(*zip(*city_coordinate))
 	plt.show()
+
+def animation(city_coordinate):
+	plt.clf()
+	plt.scatter(*zip(*city_coordinate))
+	plt.plot(*zip(*city_coordinate))
+	plt.pause(0.000001)

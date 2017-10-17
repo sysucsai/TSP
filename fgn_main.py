@@ -3,6 +3,8 @@ import show_path
 import random
 import math
 import read_ans
+import time
+import matplotlib.pyplot as plt
 
 n = -1
 dis = []
@@ -52,7 +54,7 @@ def sa(input):
 	inital_dis(n, map)
 	#print(dis)
 	t = 3000
-	delta = 0.999
+	delta = 0.99
 	map = tuple(map)
 	now_path = [ i for i in range(n) ]
 	now_path = tuple(now_path)
@@ -60,10 +62,15 @@ def sa(input):
 	best_ans = now_ans
 	best_path = now_path
 	count = 0
-	random_count = 0
+	#random_count = 0
 	small_e_count = 0
-	while small_e_count < 10000:
-		for iloop in range(15000):
+	previous_time = time.time()
+	while small_e_count < int(n*n):
+		if time.time()-previous_time >= 0.5:
+			print(t, e)
+			show_path.animation([(map[i][0],map[i][1]) for i in now_path])
+			previous_time = time.time()
+		for iloop in range(int(n*n)):
 			count += 1
 			i = random.randint(0, n - 1)
 			j = random.randint(0, n - 1)
@@ -77,9 +84,9 @@ def sa(input):
 			if new_ans < now_ans:
 				now_ans = new_ans
 				now_path = new_path
-				random_count = 0
+				#random_count = 0
 			else:
-				e = math.exp((now_ans-new_ans)/t)
+				e = math.exp((best_ans-new_ans)/t)
 				if random.random() < e:
 					now_ans = new_ans
 					now_path = new_path
@@ -87,11 +94,10 @@ def sa(input):
 					small_e_count += 1
 				else:
 					small_e_count = 0
-				random_count += 1
-			if (random_count > 10000):
-				break
+				#random_count += 1
+			'''if random_count > int(n*n):
+				break'''
 		t *= delta
-		print(t, e)
 	while 1:
 		count += 1
 		print(count)
@@ -112,10 +118,11 @@ def sa(input):
 	return best_ans, best_path
 
 if __name__ == "__main__":
-	ans, ans_path = sa(r"data\ch130.tsp")
+	ans, ans_path = sa(r"data\eil101.tsp")
 	print("My ans is ", ans, " : ", ans_path)
-	std_path = read_ans.read_ans(n, r"data\ch130.opt.tour")
+	std_path = read_ans.read_ans(n, r"data\eil101.opt.tour")
 	print("Standard ans is ", dis_cal(std_path), " : ", std_path)
+	print("The relative error is ", (ans-dis_cal(std_path))/dis_cal(std_path)*100, "%")
 	tmp = [(map[i][0],map[i][1]) for i in ans_path]
 	tmp.append((map[ans_path[0]][0], map[ans_path[0]][1]))
 	show_path.plot(tmp)
