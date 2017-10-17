@@ -10,7 +10,7 @@ n = -1
 dis = []
 
 
-def inital_dis(n, map):
+def initial_dis(n, map):
 	global dis
 	for i in range(n):
 		dis.append([])
@@ -27,16 +27,23 @@ def dis_cal(path):
 	return back
 
 
-def swap(old_ans, old_path, i, j):
-	new_path = old_path[0:i] + old_path[j:j+1] + old_path[i+1:j] + old_path[i:i+1] + old_path[j+1:n]
+def swap(path, i, j):
+	tmp = path[i]
+	path[i] = path[j]
+	path[j] = tmp
+
+
+def swap_cal(ans, path, i, j):
 	if random.random() > 0.01:
-		new_ans = old_ans - dis[old_path[i-1]][old_path[i]] - dis[old_path[i]][old_path[(i+1)%n]] - \
-							dis[old_path[j-1]][old_path[j]] - dis[old_path[j]][old_path[(j+1)%n]] + \
-							dis[new_path[i-1]][new_path[i]] + dis[new_path[i]][new_path[(i+1)%n]] + \
-							dis[new_path[j-1]][new_path[j]] + dis[new_path[j]][new_path[(j+1)%n]]
-		return new_ans, new_path
+		ans -= dis[path[i-1]][path[i]] + dis[path[i]][path[(i+1)%n]] + \
+			   dis[path[j-1]][path[j]] + dis[path[j]][path[(j+1)%n]]
+		swap(path, i, j)
+		ans += dis[path[i - 1]][path[i]] + dis[path[i]][path[(i + 1) % n]] + \
+			   dis[path[j - 1]][path[j]] + dis[path[j]][path[(j + 1) % n]]
+		return ans, path
 	else :
-		return dis_cal(new_path), new_path
+		swap(path, i, j)
+		return dis_cal(path), path
 
 
 def test_argu(p, delta):
@@ -48,19 +55,15 @@ def test_argu(p, delta):
 	print("p = ", p, "    count = ", count)
 
 
-def sa(input):
+def sa(input, t = 3000,  delta = 0.99):
 	global n, map
 	n, map = readin.readin(input)
-	inital_dis(n, map)
-	#print(dis)
-	t = 3000
-	delta = 0.99
+	initial_dis(n, map)
 	map = tuple(map)
 	now_path = [ i for i in range(n) ]
-	now_path = tuple(now_path)
 	now_ans = dis_cal(now_path)
 	best_ans = now_ans
-	best_path = now_path
+	best_path = now_path[:]
 	count = 0
 	#random_count = 0
 	small_e_count = 0
@@ -77,41 +80,41 @@ def sa(input):
 			while i >= j:
 				i = random.randint(0, n - 1)
 				j = random.randint(0, n - 1)
-			new_ans, new_path= swap(now_ans, now_path, i, j)
+			new_ans, now_path= swap_cal(now_ans, now_path, i, j)
 			if new_ans < best_ans:
 				best_ans = new_ans
-				best_path = new_path
+				best_path = now_path[:]
 			if new_ans < now_ans:
 				now_ans = new_ans
-				now_path = new_path
-				#random_count = 0
 			else:
-				e = math.exp((best_ans-new_ans)/t)
+				if t < 100:
+					e = math.exp((now_ans-new_ans)/t)
+				else :
+					e = math.exp((best_ans - new_ans) / t)
 				if random.random() < e:
 					now_ans = new_ans
-					now_path = new_path
-				elif e < 1e-3:
-					small_e_count += 1
-				else:
-					small_e_count = 0
-				#random_count += 1
-			'''if random_count > int(n*n):
-				break'''
+				else :
+					swap(now_path, i, j)
+					if e < 1e-3:
+						small_e_count += 1
+					else:
+						small_e_count = 0
 		t *= delta
 	while 1:
 		count += 1
 		print(count)
 		better_ans = best_ans
-		better_path = best_path
+		better_path = best_path[:]
 		for i in range(n):
 			for j in range(n):
-				new_ans, new_path = swap(best_ans, best_path, i, j)
+				new_ans, new_path = swap_cal(best_ans, best_path, i, j)
 				if new_ans < better_ans:
 					better_ans = new_ans
-					better_path = new_path
+					better_path = new_path[:]
+				swap(best_path, i, j)
 		if better_ans > best_ans:
 			best_ans = better_ans
-			best_path = better_path
+			best_path = better_path[:]
 		else:
 			break
 	print("count = ", count)
@@ -125,6 +128,4 @@ if __name__ == "__main__":
 	print("The relative error is ", (ans-dis_cal(std_path))/dis_cal(std_path)*100, "%")
 	tmp = [(map[i][0],map[i][1]) for i in ans_path]
 	tmp.append((map[ans_path[0]][0], map[ans_path[0]][1]))
-	show_path.plot(tmp)
-
-
+show_path.plot(tmp)
