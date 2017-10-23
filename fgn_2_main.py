@@ -7,11 +7,11 @@ import time
 
 const_t = 10
 
-def show(path):
+'''def show(path):
 	temp = []
 	for j in range(n):
 		temp.append((map[path[j]][0], map[path[j]][1]))
-	show_path.animation(temp)
+	show_path.animation(temp, std_path, dif)'''
 
 
 def randomNeighbour(now_ans, now_path):
@@ -97,7 +97,7 @@ def initial2(ans,path):
 	y = 1
 
 
-def sa(ans,path):
+def sa(ans,path,std_path):
 	global n, t, map, dis, outer_loop, inner_loop, y
 	print(t)
 	now_ans, now_path = ans,path					# 初始化设置
@@ -114,10 +114,14 @@ def sa(ans,path):
 	for oloop in range(0,outer_loop):
 		if time.time()-previous_time >= 0.5:
 			print(t, e)
-			show_path.animation([(map[i][0],map[i][1]) for i in now_path])
+
+			dif = e
+			show_path.animation([(map[i][0],map[i][1]) for i in now_path], std_path, dif)
+
 			previous_time = time.time()
 		iloop = inner_loop
 		while iloop > 1:			# 内层循环控制，通过迭代的次数
+
 			new_ans, new_path= randomNeighbour(now_ans, now_path)
 											# 邻域函数，随机选取一个邻域
 			if new_ans < best_ans:
@@ -185,11 +189,13 @@ def test():
 if __name__ == "__main__":
 	global n,map
 	n, map = readin.readin(r"data\eil101.tsp")
-	now_ans,now_path = initial()
-	ans, ans_path = sa(now_ans,now_path)
-	print("My ans is ", ans, " : ", ans_path)
 	std_path = read_ans.read_ans(n, r"data\eil101.opt.tour")
-	std_ans = dis_cal(std_path)
+	#show_path.initialize(std_path)
+	now_ans,now_path = initial()
+	ans, ans_path = sa(now_ans,now_path,std_path)
+	print("My ans is ", ans, " : ", ans_path)
+	'''std_ans = dis_cal(std_path)
+	dif = (ans-std_ans)/std_ans
 	print("Standard ans is ", std_ans, " : ", std_path)
-	print("different = ",(ans-std_ans)/std_ans*100)
+	print("different = ",(ans-std_ans)/std_ans*100)'''
 #	show(std_path)

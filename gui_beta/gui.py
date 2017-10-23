@@ -3,10 +3,13 @@
 
 
 import sys
-
+import random
+import matplotlib
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 class Example(QWidget):
 
@@ -28,13 +31,7 @@ class Example(QWidget):
 
 
     def initUI(self):
-
-        QToolTip.setFont(QFont('SansSerif', 10))
-
-        self.setToolTip('This is a <b>QWidget</b> widget')
-
-        self.btn = QPushButton(str(self.n), self)
-        self.btn.setToolTip('This is a <b>QPushButton</b> widget')
+        self.btn = QPushButton("start", self)
         self.btn.clicked.connect(self.change)
         #self.connect(btn,QtCore.SIGNAL('clicked()'),self.change)
         #btn.clicked.connect(change)
@@ -43,21 +40,24 @@ class Example(QWidget):
 
         self.setGeometry(100, 200, 1080, 720)
         self.setWindowTitle('Tooltips')
-        self._xpButton = QRadioButton("WindowsXP")
-        self._windowSButton = QRadioButton("Windows")
+        self.ls_btn = QRadioButton("local search")
+        self.sa_btn = QRadioButton("simulated annealing")
 
-        self._xpButton.toggled.connect(lambda:self.changeStyle("WindowsXP"))
-        self._windowSButton.toggled.connect(lambda:self.changeStyle("Windows"))
+        self.ls_btn.move(400, 400)
+        self.sa_btn.move(400, 500)
+
+        #self._xpButton.toggled.connect(lambda:self.changeStyle("WindowsXP"))
+        #self._windowSButton.toggled.connect(lambda:self.changeStyle("Windows"))
 
         layout = QVBoxLayout()
-        layout.addWidget(self._xpButton)
-        layout.addWidget(self._windowSButton)
+        layout.addWidget(self.ls_btn)
+        layout.addWidget(self.sa_btn)
         layout.addStretch(1)
 
         self.setLayout(layout)
 
-    def changeStyle(self,styleName):
-        QApplication.setStyle(QStyleFactory.create(styleName))
+    #def changeStyle(self,styleName):
+        #QApplication.setStyle(QStyleFactory.create(styleName))
 
 
 
