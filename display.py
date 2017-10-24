@@ -1,5 +1,9 @@
 import sys
 import random
+import std_path
+import readin
+import fgn_2_main
+import hill_climbing_main
 #这里要import原主函数里的“头文件”
 import matplotlib
 matplotlib.use("Qt5Agg")
@@ -31,7 +35,7 @@ class MyMplCanvas(FigureCanvas):
 
 class MyStaticMplCanvas(MyMplCanvas):
     def compute_initial_figure(self):
-        opt_tour = [(50, 300), (150, 400), (200, 350), (300, 450), (400, 300), (250, 150),(50,300)]
+        opt_tour = std_path.read_std_path()
         self.axes.scatter(*zip(*opt_tour))
         self.axes.plot(*zip(*opt_tour))
 
@@ -50,6 +54,10 @@ class MyDynamicMplCanvas(MyMplCanvas):
         l = [random.randint(0, 10) for i in range(4)]
 
         self.axes.plot([0, 1, 2, 3], l, 'r')
+        #SD = hill_climbing_main.dis_cal(std_path)/best_ans*100
+        #dif = SD
+        #tt = "divention degree:" + str(dif)
+        #self.axes.title(tt)
         self.draw()
 
 class ApplicationWindow(QMainWindow):
@@ -77,26 +85,28 @@ class ApplicationWindow(QMainWindow):
         l.addWidget(sc)
         l.addWidget(dc)
 
+
+
         #模拟退火法按钮
-        self.btn1 = QPushButton("SA", self)
+        self.btn1 = QPushButton("Simulate Anneal", self)
         self.btn1.resize(self.btn1.sizeHint())
         #这里改成连接到fgn_2_main.py的连接
         self.btn1.clicked.connect(QCoreApplication.quit)
-        self.btn1.move(100, 360)
+        l.addWidget(self.btn1)
 
         #爬山法按钮
-        self.btn2 = QPushButton("HC", self)
+        self.btn2 = QPushButton("Hill Climbing", self)
         self.btn2.resize(self.btn2.sizeHint())
         #这里改成连接到hill_climbing_main.py的连接
         self.btn2.clicked.connect(QCoreApplication.quit)
-        self.btn2.move(350, 360)
+        l.addWidget(self.btn2)
 
         #启动按钮
         self.btn3 = QPushButton("LET'S ROCK ON!!!", self)
         self.btn3.resize(self.btn3.sizeHint())
         #这里改成启动程序
         self.btn3.clicked.connect(QCoreApplication.quit)
-        self.btn3.move(210, 360)
+        l.addWidget(self.btn3)
 
         self.main_widget.setFocus()
         self.setCentralWidget(self.main_widget)
