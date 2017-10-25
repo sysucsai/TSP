@@ -42,9 +42,3 @@ def animation(city_coordinate, std_path, dif):
 	plt.scatter(*zip(*right_path))
 	plt.plot(*zip(*right_path))
 	plt.pause(0.00000001)
-
-def animation_only_myAns(city_coordinate):
-	plt.clf()
-	plt.scatter(*zip(*city_coordinate))
-	plt.plot(*zip(*city_coordinate))
-	plt.pause(0.000001)
