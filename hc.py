@@ -76,6 +76,9 @@ class Hc:
 			self.finish = True
 			return [(self.map[i][0], self.map[i][1]) for i in self.best_path]
 
+	def get_dif(self):
+		self.dif = (self.now_ans - self.best_ans) / self.best_ans
+
 
 if __name__ == "__main__":
 	obj = Hc(r"data\eil101.tsp")

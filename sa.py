@@ -19,6 +19,7 @@ class Sa:
 		self.delta = delta
 		self.finish = False
 		self.frequency = frequency
+		self.dif = 1
 
 	def initial_dis(self, n, map):
 		self.dis = []
@@ -93,6 +94,9 @@ class Sa:
 			self.t *= self.delta
 		self.finish = True
 		return [(self.map[i][0], self.map[i][1]) for i in self.now_path]
+
+	def get_dif(self):
+		self.dif = (self.now_ans - self.best_ans) / self.best_ans
 
 if __name__ == "__main__":
 	obj = Sa(r"data\eil101.tsp")

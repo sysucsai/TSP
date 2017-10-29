@@ -16,6 +16,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from numpy import arange, sin, pi
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
 mode = 'null'
@@ -58,7 +59,9 @@ class MyDynamicMplCanvas(MyMplCanvas):
     def update_figure(self,opt_tour = std_path.read_std_path(),dif = 1):
         global mode
         if mode == 'null':
-            path = [(0,0)]
+            self.obj = sa.Sa(r"data\eil101.tsp")
+            path = std_path.read_ini_path()
+            path.append(path[0])
         elif mode == 'sa_initial':
             self.obj = sa.Sa(r"data\eil101.tsp")
             path = std_path.read_ini_path()
@@ -67,17 +70,20 @@ class MyDynamicMplCanvas(MyMplCanvas):
         elif mode == 'sa_run':
             path = self.obj.next()
             path.append(path[0])
+            dif = self.obj.get_dif()
         elif mode == 'hc_initial':
             self.obh = hc.Hc(r"data\eil101.tsp")
             path = std_path.read_ini_path()
             path.append(path[0])
+            dif = self.obh.get_dif()
         elif mode == 'hc_run':
             path = self.obh.next()
             path.append(path[0])
-        #lf_title = "Deviation degree:" + str(dif)
-        #self.axes.title(lf_title)
+            dif = self.obh.get_dif()
+        lf_title = "Deviation degree:" + str(dif)
         self.axes.scatter(*zip(*path))
         self.axes.plot(*zip(*path))
+        self.axes.set_title(lf_title)
         self.draw()
 
 class ApplicationWindow(QMainWindow):
@@ -87,8 +93,7 @@ class ApplicationWindow(QMainWindow):
         self.setWindowTitle("程序主窗口")
 
         self.file_menu = QMenu('&File', self)
-        self.file_menu.addAction('&Quit', self.fileQuit,
-                                 QtCore.Qt.CTRL + QtCore.Qt.Key_Q)
+        self.file_menu.addAction('&Quit', self.fileQuit, QtCore.Qt.CTRL + QtCore.Qt.Key_Q)
         self.menuBar().addMenu(self.file_menu)
 
         self.help_menu = QMenu('&Help', self)
