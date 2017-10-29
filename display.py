@@ -4,6 +4,7 @@ import std_path
 import readin
 import fgn_2_main
 import hill_climbing_main
+import sa
 #这里要import原主函数里的“头文件”
 import matplotlib
 matplotlib.use("Qt5Agg")
@@ -16,6 +17,7 @@ from numpy import arange, sin, pi
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+mode = 0
 
 class MyMplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -45,16 +47,31 @@ class MyDynamicMplCanvas(MyMplCanvas):
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_figure)
         timer.start(1000)
+        if mode == 0:
+            self.obj = sa.Sa(r"data\eil101.tsp")
+        else:
+            self.obj = hc.Hc(r"data\eil101.tsp")
 
     def compute_initial_figure(self):
-        self.axes.plot(readin.readin()[1])
+        self.axes.plot([0, 1, 2, 3], [1, 2, 0, 4], 'r')
 
-    def update_figure(self,opt_tour = std_path.read_std_path(),dif = 1):
+    def update_figure(self):
+        objec = Sa(r"data\eil101.tsp")
         # 构建4个随机整数，位于闭区间[0, 10]
+        #if mode == 0:
+
+
+        #else:
+
+
+        l = self.obj.next()
         #l = [random.randint(0, 10) for i in range(4)]
-        lf_title = "Deviation degree:" + str(dif)
-        self.axes.title(lf_title)
-        self.axes.plot(opt_tour)
+
+        self.axes.plot([0, 1, 2, 3], l, 'r')
+        #SD = hill_climbing_main.dis_cal(std_path)/best_ans*100
+        #dif = SD
+        #tt = "divention degree:" + str(dif)
+        #self.axes.title(tt)
         self.draw()
 
 class ApplicationWindow(QMainWindow):
@@ -82,29 +99,22 @@ class ApplicationWindow(QMainWindow):
         l.addWidget(sc)
         l.addWidget(dc)
 
+
+
         #模拟退火法按钮
-        self.btn1 = QPushButton("SA", self)
+        self.btn1 = QPushButton("Simulate Anneal", self)
         self.btn1.resize(self.btn1.sizeHint())
         #这里改成连接到fgn_2_main.py的连接
-        self.btn1.clicked.connect(SA)
-        self.btn1.move(100, 360)
+        self.btn1.clicked.connect(decide_SA)
+        l.addWidget(self.btn1)
 
         #爬山法按钮
-        self.btn2 = QPushButton("HC", self)
+        self.btn2 = QPushButton("Hill Climbing", self)
         self.btn2.resize(self.btn2.sizeHint())
         #这里改成连接到hill_climbing_main.py的连接
-        self.btn2.clicked.connect(QCoreApplication.quit)
-        self.btn2.move(350, 360)
+        self.btn2.clicked.connect(decide_HC)
+        l.addWidget(self.btn2)
 
-        #启动按钮
-        self.btn3 = QPushButton("LET'S ROCK ON!!!", self)
-        self.btn3.resize(self.btn3.sizeHint())
-        #这里改成启动程序
-        self.btn3.clicked.connect(QCoreApplication.quit)
-        self.btn3.move(210, 360)
-
-        self.main_widget.setFocus()
-        self.setCentralWidget(self.main_widget)
 
         # 状态条显示2秒
         #self.statusBar().showMessage("matplotlib 万岁!", 2000)
@@ -118,67 +128,12 @@ class ApplicationWindow(QMainWindow):
     def about(self):
         QMessageBox.about(self, "About", "no about")
 
-def SA():
-	global n,map
-	n, map = readin.readin(r"data\eil101.tsp")
-	std_path = read_ans.read_ans(n, r"data\eil101.opt.tour")
-	ans,path = fgn_2_main.initial()
-	
-	global t, dis, outer_loop, inner_loop, y
-	print(t)
-	now_ans, now_path = ans,path					# 初始化设置
-	best_ans, best_path = now_ans, now_path
-	#print(dis)
+    def decide_SA():
+        mode = 0
 
-	stable = 1
-	k = 1
-	average = now_ans
-	sd = 0
+    def decide_HC():
+        mode = 1
 
-	previous_time = time.time()
-#	while  stable < outer_loop:					# 外层循环控制1，通过最优解10000步内不变
-	for oloop in range(0,outer_loop):
-		if time.time()-previous_time >= 0.5:
-			print(t, e)
-			std_ans = fgn_2_main.dis_cal(std_path)
-			dif = (now_ans-std_ans)/std_ans
-			MyDynamicMplCanvas.update_figure([(map[i][0],map[i][1]) for i in now_path],dif)
-
-			previous_time = time.time()
-		iloop = inner_loop
-		while iloop > 1:			# 内层循环控制，通过迭代的次数
-
-			new_ans, new_path= randomNeighbour(now_ans, now_path)
-											# 邻域函数，随机选取一个邻域
-			if new_ans < best_ans:
-				best_ans = new_ans
-				best_path = new_path.copy()
-		#		show(best_path)
-				stable =0
-			else: stable +=1
-			if new_ans < now_ans:
-				now_ans = new_ans
-				now_path = new_path.copy()
-			else:
-			#	if stable > inner_loop/2:
-				e = math.exp((now_ans-new_ans)/(y * t))
-			#	else:
-			#		e = 0.00001
-				if random.random() < e:		# 随机接受
-					now_ans = new_ans
-					now_path = new_path.copy()
-	#		print(stable)
-			iloop -=1
-	#	t /= math.log(1+k)					# 冷却控制
-	#	t /= (1+k)
-	#	t -=1
-		t *=0.90
-	#	average = (average*k + best_ans)/(k+1)
-	#	sd = abs((best_ans - average)/average)
-	#	if(k>2):iloop = inner_loop/sd
-	#	iloop = inner_loop
-		k += 1
-		if(t < 0.1): break
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
