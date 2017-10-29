@@ -4,6 +4,7 @@ import std_path
 import readin
 import fgn_2_main
 import hill_climbing_main
+import sa
 #这里要import原主函数里的“头文件”
 import matplotlib
 matplotlib.use("Qt5Agg")
@@ -16,6 +17,7 @@ from numpy import arange, sin, pi
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+mode = 0
 
 class MyMplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -45,14 +47,31 @@ class MyDynamicMplCanvas(MyMplCanvas):
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_figure)
         timer.start(1000)
+        if mode == 0:
+            self.obj = sa.Sa(r"data\eil101.tsp")
+        else:
+            self.obj = hc.Hc(r"data\eil101.tsp")
 
     def compute_initial_figure(self):
-        self.axes.plot(readin.readin()[1])
+        self.axes.plot([0, 1, 2, 3], [1, 2, 0, 4], 'r')
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     def update_figure(self,opt_tour = std_path.read_std_path(),dif = 1):
+=======
+    def update_figure(self):
+        objec = Sa(r"data\eil101.tsp")
+>>>>>>> 18fb8d8c1f491699321474bf2a388040d6ba43a6
         # 构建4个随机整数，位于闭区间[0, 10]
+        #if mode == 0:
+
+
+        #else:
+
+
+        l = self.obj.next()
         #l = [random.randint(0, 10) for i in range(4)]
+<<<<<<< HEAD
         lf_title = "Deviation degree:" + str(dif)
         self.axes.title(lf_title)
         self.axes.plot(opt_tour)
@@ -60,13 +79,18 @@ class MyDynamicMplCanvas(MyMplCanvas):
     def update_figure(self):
         # 构建4个随机整数，位于闭区间[0, 10]
         l = [random.randint(0, 10) for i in range(4)]
+=======
+>>>>>>> 18fb8d8c1f491699321474bf2a388040d6ba43a6
 
         self.axes.plot([0, 1, 2, 3], l, 'r')
         #SD = hill_climbing_main.dis_cal(std_path)/best_ans*100
         #dif = SD
         #tt = "divention degree:" + str(dif)
         #self.axes.title(tt)
+<<<<<<< HEAD
 >>>>>>> parent of f711ae6... display updated
+=======
+>>>>>>> 18fb8d8c1f491699321474bf2a388040d6ba43a6
         self.draw()
 
 class ApplicationWindow(QMainWindow):
@@ -94,10 +118,13 @@ class ApplicationWindow(QMainWindow):
         l.addWidget(sc)
         l.addWidget(dc)
 
+
+
         #模拟退火法按钮
-        self.btn1 = QPushButton("SA", self)
+        self.btn1 = QPushButton("Simulate Anneal", self)
         self.btn1.resize(self.btn1.sizeHint())
         #这里改成连接到fgn_2_main.py的连接
+<<<<<<< HEAD
 <<<<<<< HEAD
         self.btn1.clicked.connect(SA)
         self.btn1.move(100, 360)
@@ -105,11 +132,16 @@ class ApplicationWindow(QMainWindow):
         self.btn1.clicked.connect(QCoreApplication.quit)
         l.addWidget(self.btn1)
 >>>>>>> parent of f711ae6... display updated
+=======
+        self.btn1.clicked.connect(decide_SA)
+        l.addWidget(self.btn1)
+>>>>>>> 18fb8d8c1f491699321474bf2a388040d6ba43a6
 
         #爬山法按钮
-        self.btn2 = QPushButton("HC", self)
+        self.btn2 = QPushButton("Hill Climbing", self)
         self.btn2.resize(self.btn2.sizeHint())
         #这里改成连接到hill_climbing_main.py的连接
+<<<<<<< HEAD
         self.btn2.clicked.connect(QCoreApplication.quit)
 <<<<<<< HEAD
         self.btn2.move(350, 360)
@@ -134,6 +166,11 @@ class ApplicationWindow(QMainWindow):
 >>>>>>> parent of f711ae6... display updated
         self.main_widget.setFocus()
         self.setCentralWidget(self.main_widget)
+=======
+        self.btn2.clicked.connect(decide_HC)
+        l.addWidget(self.btn2)
+
+>>>>>>> 18fb8d8c1f491699321474bf2a388040d6ba43a6
 
         # 状态条显示2秒
         #self.statusBar().showMessage("matplotlib 万岁!", 2000)
@@ -147,6 +184,7 @@ class ApplicationWindow(QMainWindow):
     def about(self):
         QMessageBox.about(self, "About", "no about")
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 def SA():
 	global n,map
@@ -211,6 +249,14 @@ def SA():
 		if(t < 0.1): break
 =======
 >>>>>>> parent of f711ae6... display updated
+=======
+    def decide_SA():
+        mode = 0
+
+    def decide_HC():
+        mode = 1
+
+>>>>>>> 18fb8d8c1f491699321474bf2a388040d6ba43a6
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

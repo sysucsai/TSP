@@ -63,7 +63,7 @@ class Sa:
 		while self.small_e_count < int(self.n * self.n):
 			if time.time() - previous_time >= self.frequency:
 				print(self.t, e)
-				return [(self.map[i][0], self.map[i][1]) for i in self.now_path]+[(self.map[self.now_path[0][0]], self.map[self.now_path[0][1]])]
+				return [(self.map[i][0], self.map[i][1]) for i in self.now_path]
 			for iloop in range(int(self.n * self.n)):
 				self.count += 1
 				i = random.randint(0, self.n - 1)
@@ -92,7 +92,7 @@ class Sa:
 							self.small_e_count = 0
 			self.t *= self.delta
 		self.finish = True
-		return [(self.map[i][0], self.map[i][1]) for i in self.now_path] + [(self.map[self.now_path[0][0]], self.map[self.now_path[0][1]])]
+		return [(self.map[i][0], self.map[i][1]) for i in self.now_path]
 
 if __name__ == "__main__":
 	obj = Sa(r"data\eil101.tsp")
