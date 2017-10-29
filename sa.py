@@ -5,7 +5,7 @@ import math
 import show_path
 
 class Sa:
-	def __init__(self, input, frequency = 0.2, t = 3000,  delta = 0.99):
+	def __init__(self, input, frequency = 0.2, t = 3000,  delta = 0.995):
 		self.n, self.map = readin.readin(input)
 		self.initial_dis(self.n, self.map)
 		self.map = tuple(self.map)
