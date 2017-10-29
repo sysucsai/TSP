@@ -19,6 +19,12 @@ def read_ini_path(file = r"data\eil101.tsp"):
 	opt_tour.append((map[std_path[0]][0], map[std_path[0]][1]))'''
 	return map
 
+def read_std_ans(file = r"data\eil101.opt.tour"):
+	global n,map
+	n, map = readin.readin(r"data\eil101.tsp")
+	std_path = read_ans.read_ans(n, file)
+	return std_path
+
 if __name__ == '__main__':
 	'''运行sample'''
 	#show_path.plot(read_std_path()[1])

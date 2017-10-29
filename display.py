@@ -66,6 +66,7 @@ class MyDynamicMplCanvas(MyMplCanvas):
             self.obj = sa.Sa(r"data\eil101.tsp")
             path = std_path.read_ini_path()
             path.append(path[0])
+            dif = self.obj.get_dif()
             #mode = 'sa_run'
         elif mode == 'sa_run':
             path = self.obj.next()
@@ -80,7 +81,7 @@ class MyDynamicMplCanvas(MyMplCanvas):
             path = self.obh.next()
             path.append(path[0])
             dif = self.obh.get_dif()
-        lf_title = "Deviation degree:" + str(dif)
+        lf_title = "Deviation degree:" + str(round(dif*100,2)) + '%'
         self.axes.scatter(*zip(*path))
         self.axes.plot(*zip(*path))
         self.axes.set_title(lf_title)

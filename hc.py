@@ -3,6 +3,7 @@ import time
 import random
 import math
 import show_path
+import std_path
 
 class Hc:
 	def __init__(self, input, frequency = 0.2, t = 3000,  delta = 0.99):
@@ -19,6 +20,8 @@ class Hc:
 		self.delta = delta
 		self.finish = False
 		self.frequency = frequency
+		self.k = self.n-1
+		self.x = 1
 
 	def initial_dis(self, n, map):
 		self.dis = []
@@ -35,11 +38,6 @@ class Hc:
 			back += self.dis[path[i]][path[(i + 1) % self.n]]
 		return back
 
-	def dis_cal(self, path):
-		back = 0
-		for i in range(self.n):
-			back += self.dis[path[i]][path[(i + 1) % self.n]]
-		return back
 
 	def swap(self, path, i, j):
 		tmp = path[i]
@@ -59,25 +57,38 @@ class Hc:
 			return self.dis_cal(path), path
 
 	def next(self):
+		if self.finish == True :
+			if self.dif <= 0.1:
+				return [(self.map[i][0], self.map[i][1]) for i in self.best_path]
+			else:
+				print("Deviation degree:" + str(round(self.dif*100,2)) + '%')
+				self.finish = False
+				for k in range(2*self.n):
+					x = random.randint(2,self.n-1)
+					self.swap(self.best_path, x, x-1)
+				
+
 		better_ans = self.best_ans
 		better_path = self.best_path[:]
 		for i in range(self.n):
 			for j in range(self.n):
-				new_ans, new_path = self.swap_cal(self.best_ans, self.best_path, i, j)
+				new_ans, new_path = self.swap_cal(self.best_ans, self.best_path, i,j)
 				if new_ans < better_ans:
 					better_ans = new_ans
 					better_path = new_path[:]
-				self.swap(self.best_path, i, j)
-		if better_ans < self.best_ans:
+				new_ans, new_path = self.swap_cal(self.best_ans, self.best_path, i,j)
+		if better_ans >= self.best_ans:
+			self.finish = True
+			return [(self.map[i][0], self.map[i][1]) for i in self.best_path]
+			
+		else:
 			self.best_ans = better_ans
 			self.best_path = better_path[:]
 			return [(self.map[i][0], self.map[i][1]) for i in self.best_path]
-		else:
-			self.finish = True
-			return [(self.map[i][0], self.map[i][1]) for i in self.best_path]
 
-	def get_dif(self):
-		self.dif = (self.now_ans - self.best_ans) / self.best_ans
+	def get_dif(self,opt_tour = std_path.read_std_ans()):
+		self.dif = (self.dis_cal(self.best_path) - self.dis_cal(opt_tour)) / self.dis_cal(opt_tour)
+		return self.dif
 
 
 if __name__ == "__main__":

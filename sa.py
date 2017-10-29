@@ -3,6 +3,7 @@ import time
 import random
 import math
 import show_path
+import std_path
 
 class Sa:
 	def __init__(self, input, frequency = 0.2, t = 3000,  delta = 0.995):
@@ -36,11 +37,6 @@ class Sa:
 			back += self.dis[path[i]][path[(i + 1) % self.n]]
 		return back
 
-	def dis_cal(self, path):
-		back = 0
-		for i in range(self.n):
-			back += self.dis[path[i]][path[(i + 1) % self.n]]
-		return back
 
 	def swap(self, path, i, j):
 		tmp = path[i]
@@ -95,8 +91,9 @@ class Sa:
 		self.finish = True
 		return [(self.map[i][0], self.map[i][1]) for i in self.now_path]
 
-	def get_dif(self):
-		self.dif = (self.now_ans - self.best_ans) / self.best_ans
+	def get_dif(self,opt_tour = std_path.read_std_ans()):
+		self.dif = (self.now_ans - self.dis_cal(opt_tour)) / self.dis_cal(opt_tour)
+		return self.dif
 
 if __name__ == "__main__":
 	obj = Sa(r"data\eil101.tsp")
